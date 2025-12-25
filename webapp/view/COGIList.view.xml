@@ -1,0 +1,255 @@
+<mvc:View controllerName="finprecheck.controller.COGIList"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table">
+    <Page id="COGIPage" title="COGI - 生产订单货物移动列表" showNavButton="true" navButtonPress="onNavBack">
+        <content>
+            <!-- 调整Grid配置，减少右侧留白 -->
+            <l:Grid defaultSpan="XL12 L12 M12 S12" 
+                    containerQuery="true" 
+                    width="100%">
+                <l:content>
+                    <!-- 查询工具栏 -->
+                    <Panel class="sapUiNoMargin" expandable="false" width="100%">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title text="查询条件" level="H3" />
+                            </Toolbar>
+                        </headerToolbar>
+                        <content>
+                            <HBox alignItems="Center" wrap="Wrap" class="sapUiMediumMargin" justifyContent="SpaceBetween">
+                                <!-- 左侧控件组 -->
+                                <HBox alignItems="Center" wrap="Wrap">
+                                    <!-- 过账日期月份 -->
+                                    <HBox alignItems="Center" class="sapUiSmallMarginEnd">
+                                        <Label text="过账日期月份" required="true" class="sapUiSmallMarginEnd" />
+                                        <DatePicker id="monthPicker" 
+                                                    width="12rem"
+                                                    displayFormat="yyyy-MM" 
+                                                    valueFormat="yyyy-MM"
+                                                    value="2025-10"
+                                                    placeholder="选择月份" />
+                                    </HBox>
+                                </HBox>
+                                
+                                <!-- 右侧按钮组 -->
+                                <HBox class="sapUiSmallMarginStart">
+                                    <Button text="查询" 
+                                            press="onSearch" 
+                                            type="Emphasized"
+                                            icon="sap-icon://search"
+                                            class="sapUiTinyMarginEnd" />
+                                    <Button text="导出Excel" 
+                                            press="onExport" 
+                                            type="Default"
+                                            icon="sap-icon://excel-attachment"
+                                            class="sapUiTinyMarginEnd" />
+                                    <MenuButton text="沟通"
+                                                type="Default"
+                                                icon="sap-icon://discussion-2"
+                                                buttonMode="Split"
+                                                defaultAction="onCommunicationDefault">
+                                        <menu>
+                                            <Menu>
+                                                <MenuItem text="添加注释" 
+                                                         icon="sap-icon://comment" 
+                                                         press="onAddComment"/>
+                                                <MenuItem text="发送通知" 
+                                                         icon="sap-icon://notification" 
+                                                         press="onSendNotification"/>
+                                                <MenuItem text="发送电子邮件" 
+                                                         icon="sap-icon://email" 
+                                                         press="onSendEmail"/>
+                                                <MenuItem text="设置为已完成" 
+                                                         icon="sap-icon://accept" 
+                                                         press="onMarkCompleted"/>
+                                            </Menu>
+                                        </menu>
+                                    </MenuButton>
+                                </HBox>
+                            </HBox>
+                        </content>
+                    </Panel>
+
+                    <!-- 表格工具栏 -->
+                    <Panel class="sapUiNoMargin sapUiMediumMarginTop" expandable="false" height="600px" width="100%">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title text="COGI列表" level="H3" />
+                                <Text text="({= ${view>/COGIData}.length || 0} 条记录)" class="sapUiTinyMarginBegin" />
+                                <ToolbarSpacer />
+                                
+                                <!-- 表格功能按钮 -->
+                                <SearchField width="15rem" 
+                                             placeholder="搜索..."
+                                             search="onTableSearch"
+                                             liveChange="onTableLiveSearch" />
+                                <Button icon="sap-icon://filter" 
+                                        press="onOpenFilterDialog" 
+                                        tooltip="高级筛选"
+                                        class="sapUiTinyMarginBegin" />
+                                <MenuButton icon="sap-icon://action-settings" 
+                                           tooltip="表格设置"
+                                           class="sapUiTinyMarginBegin">
+                                    <menu>
+                                        <Menu>
+                                            <MenuItem text="显示/隐藏列" 
+                                                     icon="sap-icon://show" 
+                                                     press="onOpenColumnDialog" />
+                                            <MenuItem text="重置列宽" 
+                                                     icon="sap-icon://refresh" 
+                                                     press="onResetColumnWidth" />
+                                            <MenuItem text="导出Excel" 
+                                                     icon="sap-icon://excel-attachment" 
+                                                     press="onExportToExcel" />
+                                            <MenuItem text="保存视图" 
+                                                     icon="sap-icon://save" 
+                                                     press="onSaveTableView" />
+                                        </Menu>
+                                    </menu>
+                                </MenuButton>
+                            </Toolbar>
+                        </headerToolbar>
+                        
+                        <content>
+                            <table:Table id="cogiTable"
+                                        rows="{view>/COGIData}"
+                                        selectionMode="MultiSelect"
+                                        visibleRowCountMode="Auto"
+                                        minAutoRowCount="5"
+                                        enableColumnReordering="true"
+                                        enableColumnFreeze="true"
+                                        columnHeaderHeight="40"
+                                        rowHeight="50"
+                                        alternateRowColors="true"
+                                        class="sapUiSizeCompact"
+                                        width="100%"
+                                        rowSelectionChange="onSelectionChange">
+                                
+                                <table:columns>
+                                    <!-- 序号列 -->
+                                    <table:Column id="indexColumn" width="80px" resizable="true">
+                                        <table:label><Label text="序号" /></table:label>
+                                        <table:template><Text text="{view>index}" wrapping="false" /></table:template>
+                                    </table:Column>
+                                    
+                                    <!-- 生产订单列 -->
+                                    <table:Column id="productionOrderColumn" width="120px" resizable="true" sortProperty="productionOrder" filterProperty="productionOrder">
+                                        <table:label><Label text="生产订单" /></table:label>
+                                        <table:template><Text text="{view>productionOrder}" wrapping="false" /></table:template>
+                                    </table:Column>
+                                    
+                                    <!-- 物料号列 -->
+                                    <table:Column id="materialColumn" width="150px" resizable="true" sortProperty="material" filterProperty="material">
+                                        <table:label><Label text="物料号" /></table:label>
+                                        <table:template><Text text="{view>material}" wrapping="false" /></table:template>
+                                    </table:Column>
+                                    
+                                    <!-- 物料描述列 -->
+                                    <table:Column id="materialDescColumn" width="200px" resizable="true" sortProperty="materialDesc" filterProperty="materialDesc">
+                                        <table:label><Label text="物料描述" /></table:label>
+                                        <table:template><Text text="{view>materialDesc}" wrapping="true" maxLines="2" /></table:template>
+                                    </table:Column>
+                                    
+                                    <!-- 工厂列 -->
+                                    <table:Column id="plantColumn" width="100px" resizable="true" sortProperty="plant" filterProperty="plant">
+                                        <table:label><Label text="工厂" /></table:label>
+                                        <table:template><Text text="{view>plant}" wrapping="false" /></table:template>
+                                    </table:Column>
+                                    
+                                    <!-- 存储地点列 -->
+                                    <table:Column id="storagePlaceColumn" width="120px" resizable="true" sortProperty="storagePlace" filterProperty="storagePlace">
+                                        <table:label><Label text="存储地点" /></table:label>
+                                        <table:template><Text text="{view>storagePlace}" wrapping="false" /></table:template>
+                                    </table:Column>
+                                    
+                                    <!-- 移动类型列 -->
+                                    <table:Column id="movementTypeColumn" width="100px" resizable="true" sortProperty="movementType" filterProperty="movementType">
+                                        <table:label><Label text="移动类型" /></table:label>
+                                        <table:template><Text text="{view>movementType}" wrapping="false" /></table:template>
+                                    </table:Column>
+                                    
+                                    <!-- 错误描述列 -->
+                                    <table:Column id="errorDescColumn" width="300px" resizable="true" sortProperty="errorDesc" filterProperty="errorDesc">
+                                        <table:label><Label text="错误描述" /></table:label>
+                                        <table:template><Text text="{view>errorDesc}" wrapping="true" maxLines="3" /></table:template>
+                                    </table:Column>
+                                    
+                                    <!-- AI建议列 -->
+                                    <table:Column id="aiSuggestionColumn" width="350px" resizable="true" sortProperty="aiSuggestion" filterProperty="aiSuggestion">
+                                        <table:label><Label text="AI建议" /></table:label>
+                                        <table:template><Text text="{view>aiSuggestion}" wrapping="true" maxLines="3" /></table:template>
+                                    </table:Column>
+                                </table:columns>
+                                
+                                <!-- 无数据显示 -->
+                                <table:noData>
+                                    <IllustratedMessage 
+                                        illustrationType="sapIllus-EmptyList"
+                                        title="暂无数据"
+                                        description="请选择查询条件并点击查询按钮获取COGI数据" />
+                                </table:noData>
+                            </table:Table>
+                        </content>
+                    </Panel>
+                </l:content>
+            </l:Grid>
+        </content>
+    </Page>
+
+    <!-- 发送通知对话框 -->
+    <Dialog id="sendNotificationDialog" 
+        title="发送通知" 
+        draggable="true" 
+        resizable="true"
+        contentWidth="500px"
+        contentHeight="400px">
+        <content>
+            <VBox class="sapUiMediumMargin">
+                <!-- 到期日期 -->
+                <Label text="到期日期：" required="true" class="sapUiTinyMarginBottom"/>
+                <DatePicker id="dueDatePicker" 
+                    displayFormat="yyyy.MM.dd" 
+                    valueFormat="yyyy.MM.dd"
+                    placeholder="选择到期日期"
+                    width="100%"
+                    class="sapUiMediumMarginBottom"
+                    change="onDueDateChange"/>
+                
+                <!-- 收件人 -->
+                <Label text="收件人：" required="true" class="sapUiTinyMarginBottom"/>
+                <ComboBox id="recipientComboBox" 
+                    placeholder="请选择收件人"
+                    width="100%"
+                    class="sapUiMediumMarginBottom">
+                    <items>
+                        <core:Item key="I761557" text="I761557"/>
+                        <core:Item key="I761558" text="I761558"/>
+                        <core:Item key="I761559" text="I761559"/>
+                    </items>
+                </ComboBox>
+                
+                <!-- 注释 -->
+                <Label text="注释：" required="true" class="sapUiTinyMarginBottom"/>
+                <TextArea id="notificationComment" 
+                    rows="6"
+                    width="100%"
+                    placeholder="请输入注释内容..."
+                    class="sapUiMediumMarginBottom"/>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="发送" 
+                type="Emphasized" 
+                press="onConfirmSendNotification"/>
+        </beginButton>
+        <endButton>
+            <Button text="取消" 
+                press="onCancelSendNotification"/>
+        </endButton>
+    </Dialog>
+
+</mvc:View>

@@ -1,0 +1,178 @@
+<mvc:View controllerName="finprecheck.controller.CostCenterAnalysis"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:table="sap.ui.table"
+    xmlns:core="sap.ui.core">
+    <Page id="page" title="成本中心金额差异分析 (2025年10月)" showNavButton="true" navButtonPress="onNavBack">
+        <content>
+            <l:Grid defaultSpan="XL12 L12 M12 S12" containerQuery="true" width="100%">
+                <l:content>
+                    <!-- Section 1: Charts -->
+                    <Panel class="sapUiNoMargin" expandable="true" expanded="true" width="100%">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title text="图表分析" level="H3" />
+                            </Toolbar>
+                        </headerToolbar>
+                        <content>
+                            <l:Grid defaultSpan="XL4 L4 M12 S12">
+                                <l:content>
+                                    <!-- Bar Chart -->
+                                    <viz:VizFrame id="costCenterBarChart" vizType="bar" width="100%" height="300px">
+                                        <viz:dataset>
+                                            <viz.data:FlattenedDataset data="{view>/CostCenterAmounts}">
+                                                <viz.data:dimensions>
+                                                    <viz.data:DimensionDefinition name="CostCenter" value="{view>costCenter}" />
+                                                </viz.data:dimensions>
+                                                <viz.data:measures>
+                                                    <viz.data:MeasureDefinition name="Amount" value="{view>amount}" />
+                                                </viz.data:measures>
+                                            </viz.data:FlattenedDataset>
+                                        </viz:dataset>
+                                        <viz:feeds>
+                                            <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Amount" />
+                                            <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="CostCenter" />
+                                        </viz:feeds>
+                                    </viz:VizFrame>
+
+                                    <!-- Line Chart with Cost Center Selection -->
+                                    <Panel>
+                                        <content>
+                                            <FlexBox width="100%" alignItems="Start">
+                                                <viz:VizFrame id="monthlyTrendChart" vizType="line" width="100%" height="300px">
+                                                    <viz:layoutData>
+                                                        <FlexItemData growFactor="1" />
+                                                    </viz:layoutData>
+                                                    <viz:dataset>
+                                                        <viz.data:FlattenedDataset data="{view>/MonthlyTrend}">
+                                                            <viz.data:dimensions>
+                                                                <viz.data:DimensionDefinition name="Month" value="{view>month}" />
+                                                            </viz.data:dimensions>
+                                                            <viz.data:measures>
+                                                                <viz.data:MeasureDefinition name="Amount" value="{view>amount}" />
+                                                            </viz.data:measures>
+                                                        </viz.data:FlattenedDataset>
+                                                    </viz:dataset>
+                                                    <viz:feeds>
+                                                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Amount" />
+                                                        <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month" />
+                                                    </viz:feeds>
+                                                </viz:VizFrame>
+                                                <MenuButton class="sapUiSmallMarginBegin">
+                                                    <menu>
+                                                        <Menu items="{view>/CostCenterAmounts}">
+                                                            <MenuItem key="{view>costCenter}" text="{view>costCenter}" press="onCostCenterSelect" />
+                                                        </Menu>
+                                                    </menu>
+                                                </MenuButton>
+                                            </FlexBox>
+                                        </content>
+                                    </Panel>
+                                    <!-- Pie Chart with Cost Center Selection -->
+                                    <Panel>
+                                        <content>
+                                            <FlexBox width="100%" alignItems="Start">
+                                                <viz:VizFrame id="costCenterPieChart" vizType="pie" width="100%" height="300px">
+                                                    <viz:layoutData>
+                                                        <FlexItemData growFactor="1" />
+                                                    </viz:layoutData>
+                                                    <viz:dataset>
+                                                        <viz.data:FlattenedDataset data="{view>/CostElementPercentageForPie}">
+                                                            <viz.data:dimensions>
+                                                                <viz.data:DimensionDefinition name="CostElement" value="{view>costElement}" />
+                                                            </viz.data:dimensions>
+                                                            <viz.data:measures>
+                                                                <viz.data:MeasureDefinition name="Percentage" value="{view>percentage}" />
+                                                            </viz.data:measures>
+                                                        </viz.data:FlattenedDataset>
+                                                    </viz:dataset>
+                                                    <viz:feeds>
+                                                        <viz.feeds:FeedItem uid="size" type="Measure" values="Percentage" />
+                                                        <viz.feeds:FeedItem uid="color" type="Dimension" values="CostElement" />
+                                                    </viz:feeds>
+                                                </viz:VizFrame>
+                                                <MenuButton class="sapUiSmallMarginBegin">
+                                                    <menu>
+                                                        <Menu items="{view>/CostCenterAmounts}">
+                                                            <MenuItem key="{view>costCenter}" text="{view>costCenter}" press="onCostCenterSelectForPie" />
+                                                        </Menu>
+                                                    </menu>
+                                                </MenuButton>
+                                            </FlexBox>
+                                        </content>
+                                    </Panel>
+                                </l:content>
+                            </l:Grid>
+                        </content>
+                    </Panel>
+
+                    <!-- Section 2: Cost Element Chart -->
+                    <Panel class="sapUiNoMargin sapUiMediumMarginTop" expandable="true" expanded="true" width="100%">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title text="成本要素分析" level="H3" />
+                            </Toolbar>
+                        </headerToolbar>
+                        <content>
+                            <FlexBox width="100%" alignItems="Start">
+                                <viz:VizFrame id="costElementChart" vizType="combination" width="100%" height="200px">
+                                    <viz:layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </viz:layoutData>
+                                    <viz:dataset>
+                                        <viz.data:FlattenedDataset data="{view>/CostElementAmounts}">
+                                            <viz.data:dimensions>
+                                                <viz.data:DimensionDefinition name="CostElement" value="{view>costElement}" />
+                                            </viz.data:dimensions>
+                                            <viz.data:measures>
+                                                <viz.data:MeasureDefinition name="CurrentMonthAmount" value="{view>currentMonthAmount}" />
+                                                <viz.data:MeasureDefinition name="AverageAmount" value="{view>avgAmount}" />
+                                            </viz.data:measures>
+                                        </viz.data:FlattenedDataset>
+                                    </viz:dataset>
+                                    <viz:feeds>
+                                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="CurrentMonthAmount" />
+                                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="AverageAmount" />
+                                        <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="CostElement" />
+                                    </viz:feeds>
+                                </viz:VizFrame>
+                                <MenuButton class="sapUiSmallMarginBegin">
+                                    <menu>
+                                        <Menu items="{view>/CostCenterAmounts}">
+                                            <MenuItem key="{view>costCenter}" text="{view>costCenter}" press="onCostCenterSelectForElement" />
+                                        </Menu>
+                                    </menu>
+                                </MenuButton>
+                            </FlexBox>
+                        </content>
+                    </Panel>
+
+                    <!-- Section 3: Details Table -->
+                    <Panel class="sapUiNoMargin sapUiMediumMarginTop" expandable="true" expanded="true" width="100%">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title text="详细数据" level="H3" />
+                            </Toolbar>
+                        </headerToolbar>
+                        <content>
+                            <table:Table id="detailsTable" rows="{view>/Details}" selectionMode="Single" visibleRowCountMode="Auto">
+                                <table:columns>
+                                    <table:Column><table:label><Label text="成本中心" /></table:label><table:template><Text text="{view>costCenter}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="成本要素" /></table:label><table:template><Text text="{view>costElement}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="当前月份金额" /></table:label><table:template><Text text="{view>currentMonthAmount}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="过去六个月平均金额" /></table:label><table:template><Text text="{view>avgAmount}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="差异金额" /></table:label><table:template><Text text="{path: 'view>diffAmount', formatter: '.formatDiffAmount'}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="差异占比 (%)" /></table:label><table:template><Text text="{view>variance}" /></table:template></table:Column>
+                                </table:columns>
+                            </table:Table>
+                        </content>
+                    </Panel>
+                </l:content>
+            </l:Grid>
+        </content>
+    </Page>
+</mvc:View>
