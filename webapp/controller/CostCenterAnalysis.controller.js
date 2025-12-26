@@ -34,7 +34,7 @@ sap.ui.define([
                     oCostCenterBarChart.setVizProperties({
                         title: {
                             visible: true,
-                            text: "当月成本中心金额(CNY)",
+                            text: "Current Month Cost Center Amount (CNY)",
                             style: {
                                 fontSize: "16px",
                                 fontWeight: "bold"
@@ -43,13 +43,13 @@ sap.ui.define([
                         categoryAxis: {
                             title: {
                                 visible: false,
-                                text: "成本中心"  // 横坐标标题
+                                text: "Cost Center"  // X-axis title
                             }
                         },
                         valueAxis: {
                             title: {
                                 visible: false,
-                                text: "金额"  // 纵坐标标题
+                                text: "Amount"  // Y-axis title
                             }
                         },
                         plotArea: {
@@ -69,7 +69,7 @@ sap.ui.define([
                     oCostElementChart.setVizProperties({
                         title: {
                             visible: true,
-                            text: "成本要素趋势(CNY)",
+                            text: "Cost Element Trend (CNY)",
                             style: {
                                 fontSize: "16px",
                                 fontWeight: "bold"
@@ -81,11 +81,11 @@ sap.ui.define([
                             },
                             dataLabel: {
                                 visible: true,
-                                // 仅显示柱状图的数据标签
+                                // Only show data labels for bar chart
                                 renderer: function(oLabel) {
-                                    // "AverageAmount" 是折线图的度量名称
+                                    // "AverageAmount" is the measure name for line chart
                                     if (oLabel.ctx && oLabel.ctx.measureNames === "AverageAmount") {
-                                        oLabel.text = ""; // 隐藏折线图的标签
+                                        oLabel.text = ""; // Hide line chart labels
                                     }
                                 }
                             }
@@ -93,13 +93,13 @@ sap.ui.define([
                         categoryAxis: {
                             title: {
                                 visible: false,
-                                text: "成本要素"  // 横坐标标题
+                                text: "Cost Element"  // X-axis title
                             }
                         },
                         valueAxis: {
                             title: {
                                 visible: false,
-                                text: "金额"  // 纵坐标标题
+                                text: "Amount"  // Y-axis title
                             }
                         },
                     });
@@ -111,7 +111,7 @@ sap.ui.define([
                     oMonthlyTrendChart.setVizProperties({
                         title: {
                             visible: true,
-                            text: "成本中心趋势(CNY)",
+                            text: "Cost Center Trend (CNY)",
                             style: {
                                 fontSize: "16px",
                                 fontWeight: "bold"
@@ -120,13 +120,13 @@ sap.ui.define([
                         categoryAxis: {
                             title: {
                                 visible: false,
-                                text: "金额"  // 横坐标标题
+                                text: "Amount"  // X-axis title
                             }
                         },
                         valueAxis: {
                             title: {
                                 visible: false,
-                                text: "月份"  // 纵坐标标题
+                                text: "Month"  // Y-axis title
                             }
                         },
                         plotArea: {
@@ -146,7 +146,7 @@ sap.ui.define([
                     oCostCenterPieChart.setVizProperties({
                         title: {
                             visible: true,
-                            text: "成本要素金额占比",
+                            text: "Cost Element Percentage",
                             style: {
                                 fontSize: "16px",
                                 fontWeight: "bold"

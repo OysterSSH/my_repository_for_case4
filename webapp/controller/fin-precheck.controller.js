@@ -76,14 +76,14 @@ sap.ui.define([
         _showAIAnalysisPopover: function(oButton, oData) {
             if (!this._oAIPopover) {
                 this._oAIPopover = new Popover({
-                    title: "AI智能分析",
+                    title: "AI Analysis",
                     placement: "Auto",
                     contentWidth: "400px",
                     content: [
                         new VBox({
                             items: [
                                 new MessageStrip({
-                                    text: "提示：此内容为 AI 创作，仅供参考与交流",
+                                    text: "Note: This content is AI-generated and for reference only",
                                     type: "Information",
                                     showIcon: true,
                                     customIcon: "sap-icon://alert"
@@ -97,7 +97,7 @@ sap.ui.define([
                             content: [
                                 new ToolbarSpacer(),
                                 new Button({
-                                    text: "关闭",
+                                    text: "Close",
                                     type: "Emphasized",
                                     press: () => {
                                         if (this._typingInterval) {
@@ -170,6 +170,11 @@ sap.ui.define([
                 });
             } else if (iRowIndex === 1) {
                 this.oRouter.navTo("costCenterAnalysis");
+            } else if (iRowIndex === 9) {
+                this.oRouter.navTo("fixedAssetDepreciationList", {
+                    checkItem: encodeURIComponent(oData.checkItem || ""),
+                    id: oData.ID || ""
+                });
             } else {
                 MessageToast.show("该功能暂未实现，敬请期待");
             }
@@ -241,7 +246,7 @@ sap.ui.define([
         },
 
         formatAlertText: function(sAlertType) {
-            const texts = { "红灯": "报错", "黄灯": "警告", "绿灯": "通过" };
+            const texts = { "红灯": "Error", "黄灯": "Warning", "绿灯": "Pass" };
             return texts[sAlertType] || sAlertType;
         },
 

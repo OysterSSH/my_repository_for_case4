@@ -76,6 +76,10 @@
       "otherCheckDetails": {
         "type": "sap.ui.model.json.JSONModel",
         "uri": "model/OtherCheckDetails.json"
+      },
+      "fixedAssetDepreciationItems": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "model/FixedAssetDepreciationItems.json"
       }      
     },
     "resources": {
@@ -114,6 +118,11 @@
           "name": "costCenterAnalysis",
           "pattern": "costCenterAnalysis",
           "target": ["costCenterAnalysis"]
+        },
+        {
+          "name": "fixedAssetDepreciationList",
+          "pattern": "fixedAssetDepreciation/{checkItem}",
+          "target": ["fixedAssetDepreciationList"]
         }      
       ],
       "targets": {
@@ -129,6 +138,11 @@
         "costCenterAnalysis": {
           "id": "costCenterAnalysis",
           "name": "CostCenterAnalysis",
+          "level": 1
+        },
+        "fixedAssetDepreciationList": {
+          "id": "fixedAssetDepreciationList",
+          "name": "FixedAssetDepreciationList",
           "level": 1
         }
       }

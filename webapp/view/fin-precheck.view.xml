@@ -5,7 +5,7 @@
     xmlns:l="sap.ui.layout"
     xmlns:core="sap.ui.core"
     xmlns:table="sap.ui.table">
-    <Page id="page" title="财务月结预检查">
+    <Page id="page" title="Financial Month-End Pre-Check">
         <content>
             <!-- 调整Grid配置，减少右侧留白 -->
             <l:Grid defaultSpan="XL12 L12 M12 S12" width="100%">
@@ -14,7 +14,7 @@
                     <Panel class="sapUiNoMargin" expandable="false" width="100%">
                         <headerToolbar>
                             <Toolbar>
-                                <Title text="查询条件" level="H3" />
+                                <Title text="Query Conditions" level="H3" />
                             </Toolbar>
                         </headerToolbar>
                         <content>
@@ -23,31 +23,31 @@
                                 <HBox alignItems="Center" wrap="Wrap">
                                     <!-- 公司代码 -->
                                     <HBox alignItems="Center" class="sapUiSmallMarginEnd">
-                                        <Label text="公司代码" required="true" class="sapUiSmallMarginEnd" />
+                                        <Label text="Company Code" required="true" class="sapUiSmallMarginEnd" />
                                         <ComboBox id="companyCodeInput" 
                                                 width="14rem"
                                                 items="{view>/CompanyCodes}" 
-                                                placeholder="请选择公司代码"
+                                                placeholder="Please select company code"
                                                 selectionChange="onCompanyCodeChange">
                                             <core:Item key="{view>key}" text="{view>text}" />
                                         </ComboBox>
                                     </HBox>
                                     
-                                    <!-- 工厂代码 -->
+                                    <!-- Plant Code -->
                                     <HBox alignItems="Center" class="sapUiSmallMarginEnd">
-                                        <Label text="工厂代码" required="true" class="sapUiSmallMarginEnd" />
+                                        <Label text="Plant Code" required="true" class="sapUiSmallMarginEnd" />
                                         <ComboBox id="plantInput" 
                                                 width="14rem"
                                                 items="{view>/Plants}" 
-                                                placeholder="请选择工厂代码"
+                                                placeholder="Please select plant code"
                                                 selectionChange="onPlantChange">
                                             <core:Item key="{view>key}" text="{view>text}" />
                                         </ComboBox>
                                     </HBox>
                                     
-                                    <!-- 年月 -->
+                                    <!-- Year/Month -->
                                     <HBox alignItems="Center" class="sapUiSmallMarginEnd">
-                                        <Label text="年月" required="true" class="sapUiSmallMarginEnd" />
+                                        <Label text="Year/Month" required="true" class="sapUiSmallMarginEnd" />
                                         <DatePicker id="postingTimePicker" 
                                                     width="12rem"
                                                     value="2025.10" 
@@ -59,12 +59,12 @@
                                 <!-- 右侧按钮组 -->
                                 <HBox class="sapUiSmallMarginStart">
                                     <Button id="precheckButton"
-                                            text="AI预检查" 
+                                            text="AI Pre-Check" 
                                             press="onPrecheck" 
                                             type="Emphasized"
                                             icon="sap-icon://activate"
                                             class="sapUiTinyMarginEnd" />
-                                    <Button text="重置" 
+                                    <Button text="Reset" 
                                             press="onReset" 
                                             icon="sap-icon://clear-all" />
                                 </HBox>
@@ -76,34 +76,34 @@
                     <Panel class="sapUiNoMargin sapUiMediumMarginTop" expandable="false" height="600px" width="100%">
                         <headerToolbar>
                             <Toolbar>
-                                <Title text="检查结果" level="H3" />
-                                <Text text="({= ${view>/CheckResults}.length || 0} 条记录)" class="sapUiTinyMarginBegin" />
+                                <Title text="Check Results" level="H3" />
+                                <Text text="({= ${view>/CheckResults}.length || 0} records)" class="sapUiTinyMarginBegin" />
                                 <ToolbarSpacer />
                                 
                                 <!-- 表格功能按钮 -->
                                 <SearchField width="15rem" 
-                                             placeholder="搜索..."
+                                             placeholder="Search..."
                                              search="onSearch"
                                              liveChange="onLiveSearch" />
                                 <Button icon="sap-icon://filter" 
                                         press="onOpenFilterDialog" 
-                                        tooltip="高级筛选"
+                                        tooltip="Advanced Filter"
                                         class="sapUiTinyMarginBegin" />
                                 <MenuButton icon="sap-icon://action-settings" 
-                                           tooltip="表格设置"
+                                           tooltip="Table Settings"
                                            class="sapUiTinyMarginBegin">
                                     <menu>
                                         <Menu>
-                                            <MenuItem text="显示/隐藏列" 
+                                            <MenuItem text="Show/Hide Columns" 
                                                      icon="sap-icon://show" 
                                                      press="onOpenColumnDialog" />
-                                            <MenuItem text="重置列宽" 
+                                            <MenuItem text="Reset Column Width" 
                                                      icon="sap-icon://refresh" 
                                                      press="onResetColumnWidth" />
-                                            <MenuItem text="导出Excel" 
+                                            <MenuItem text="Export to Excel" 
                                                      icon="sap-icon://excel-attachment" 
                                                      press="onExportToExcel" />
-                                            <MenuItem text="保存视图" 
+                                            <MenuItem text="Save View" 
                                                      icon="sap-icon://save" 
                                                      press="onSaveTableView" />
                                         </Menu>
@@ -131,15 +131,15 @@
                                     <table:RowSettings highlight="{path: 'view>alertType', formatter: '.formatRowHighlightColor'}" />
                                 </table:rowSettingsTemplate> -->
                                 <table:columns>
-                                    <!-- ID列 -->
-                                    <table:Column id="idColumn" width="80px" resizable="true" sortProperty="ID" filterProperty="ID" hAlign="Center">
+                                    <!-- ID Column -->
+                                    <table:Column id="idColumn" width="70px" resizable="true" sortProperty="ID" filterProperty="ID" hAlign="Center">
                                         <table:label><Label text="ID" /></table:label>
                                         <table:template><Text text="{view>ID}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- 提醒方式列 -->
+                                    <!-- Alert Type Column -->
                                     <table:Column id="alertTypeColumn" width="120px" resizable="true" sortProperty="alertType" filterProperty="alertType" hAlign="Center">
-                                        <table:label><Label text="提醒方式" /></table:label>
+                                        <table:label><Label text="Alert Type" /></table:label>
                                         <table:template>
                                             <HBox alignItems="Center">
                                                 <core:Icon src="{path: 'view>alertType', formatter: '.formatAlertIcon'}" 
@@ -150,51 +150,51 @@
                                         </table:template>
                                     </table:Column>
                                     
-                                    <!-- 检查项列 -->
-                                    <table:Column id="checkItemColumn" width="220px" resizable="true" sortProperty="checkItem" filterProperty="checkItem" hAlign="Center">
-                                        <table:label><Label text="检查项" /></table:label>
+                                    <!-- Check Item Column -->
+                                    <table:Column id="checkItemColumn" width="200px" resizable="true" sortProperty="checkItem" filterProperty="checkItem" hAlign="Center">
+                                        <table:label><Label text="Check Item" /></table:label>
                                         <table:template><Text text="{view>checkItem}" wrapping="true" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- 检查结果列 -->
-                                    <table:Column id="checkResultColumn" width="350px" resizable="true" sortProperty="checkResult" filterProperty="checkResult" hAlign="Center">
-                                        <table:label><Label text="检查结果" /></table:label>
+                                    <!-- Check Result Column -->
+                                    <table:Column id="checkResultColumn" width="300px" resizable="true" sortProperty="checkResult" filterProperty="checkResult" hAlign="Center">
+                                        <table:label><Label text="Check Result" /></table:label>
                                         <table:template><Text text="{view>checkResult}" wrapping="true" maxLines="3" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- AI建议列 -->
-                                    <table:Column id="suggestedActionColumn" width="350px" resizable="true" sortProperty="suggestedAction" filterProperty="suggestedAction" hAlign="Center">
-                                        <table:label><Label text="AI建议处理方案" /></table:label>
+                                    <!-- AI Suggested Action Column -->
+                                    <table:Column id="suggestedActionColumn" width="300px" resizable="true" sortProperty="suggestedAction" filterProperty="suggestedAction" hAlign="Center">
+                                        <table:label><Label text="AI Suggested Action" /></table:label>
                                         <table:template><Text text="{view>suggestedAction}" wrapping="true" maxLines="3" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- AI说明列 -->
-                                    <table:Column id="suggestionColumn" width="120px" resizable="true" hAlign="Center">
-                                        <table:label><Label text="AI说明" /></table:label>
+                                    <!-- AI Description Column -->
+                                    <table:Column id="suggestionColumn" width="130px" resizable="true" hAlign="Center">
+                                        <table:label><Label text="AI Description" /></table:label>
                                         <table:template>
-                                            <Button text="AI分析" 
+                                            <Button text="AI Analysis" 
                                                     icon="sap-icon://discussion-2"
                                                     type="Ghost"
                                                     press="onAIAnalysisPress" />
                                         </table:template>
                                     </table:Column>
                                     
-                                    <!-- 执行Agent列 -->
-                                    <table:Column width="120px" resizable="true" sortProperty="isAgent" filterProperty="isAgent" hAlign="Center">
-                                        <table:label><Label text="操作" /></table:label>
+                                    <!-- Operation Column -->
+                                    <table:Column width="110px" resizable="true" sortProperty="isAgent" filterProperty="isAgent" hAlign="Center">
+                                        <table:label><Label text="Operation" /></table:label>
                                         <table:template>
                                             <HBox alignItems="Center" justifyContent="Center">
                                                 <Button visible="{= ${view>isAgent} === '是'}"
                                                         icon="sap-icon://product"
                                                         type="Default"
-                                                        tooltip="执行AI Agent"
+                                                        tooltip="Execute AI Agent"
                                                         press="onExecuteAgent"
                                                         class="diamondButton" />
                                                 
                                                 <Button visible="{= ${view>isAgent} !== '是'}"
                                                         icon="sap-icon://navigation-right-arrow"
                                                         type="Default"
-                                                        tooltip="查看详情"
+                                                        tooltip="View Details"
                                                         press="onNavigateToDetail"
                                                         class="arrowButton" />
                                             </HBox>
@@ -206,8 +206,8 @@
                                 <table:noData>
                                     <IllustratedMessage 
                                         illustrationType="sapIllus-EmptyList"
-                                        title="暂无数据"
-                                        description="请输入查询条件并点击预检查按钮获取检查结果" />
+                                        title="No Data"
+                                        description="Please enter query conditions and click the pre-check button to get check results" />
                                 </table:noData>
                             </table:Table>
                         </content>

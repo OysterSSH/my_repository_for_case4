@@ -1,18 +1,18 @@
-<mvc:View controllerName="finprecheck.controller.COGIList"
+<mvc:View controllerName="finprecheck.controller.FixedAssetDepreciationList"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:f="sap.ui.layout.form"
     xmlns:l="sap.ui.layout"
     xmlns:core="sap.ui.core"
     xmlns:table="sap.ui.table">
-    <Page id="COGIPage" title="COGI - Production Order Goods Movement List" showNavButton="true" navButtonPress="onNavBack">
+    <Page id="FixedAssetDepreciationPage" title="Fixed Asset Depreciation Check - Asset List" showNavButton="true" navButtonPress="onNavBack">
         <content>
-            <!-- 调整Grid配置，减少右侧留白 -->
+            <!-- Adjust Grid configuration to reduce right margin -->
             <l:Grid defaultSpan="XL12 L12 M12 S12" 
                     containerQuery="true" 
                     width="100%">
                 <l:content>
-                    <!-- 查询工具栏 -->
+                    <!-- Query Toolbar -->
                     <Panel class="sapUiNoMargin" expandable="false" width="100%">
                         <headerToolbar>
                             <Toolbar>
@@ -74,15 +74,15 @@
                         </content>
                     </Panel>
 
-                    <!-- 表格工具栏 -->
+                    <!-- Table Toolbar -->
                     <Panel class="sapUiNoMargin sapUiMediumMarginTop" expandable="false" height="600px" width="100%">
                         <headerToolbar>
                             <Toolbar>
-                                <Title text="COGI List" level="H3" />
-                                <Text text="({= ${view>/COGIData}.length || 0} records)" class="sapUiTinyMarginBegin" />
+                                <Title text="Fixed Asset List" level="H3" />
+                                <Text text="({= ${view>/FixedAssetData}.length || 0} records)" class="sapUiTinyMarginBegin" />
                                 <ToolbarSpacer />
                                 
-                                <!-- 表格功能按钮 -->
+                                <!-- Table Function Buttons -->
                                 <SearchField width="15rem" 
                                              placeholder="Search..."
                                              search="onTableSearch"
@@ -105,7 +105,7 @@
                                             <MenuItem text="Export to Excel" 
                                                      icon="sap-icon://excel-attachment" 
                                                      press="onExportToExcel" />
-                                            <MenuItem text="Save View"
+                                            <MenuItem text="Save View" 
                                                      icon="sap-icon://save" 
                                                      press="onSaveTableView" />
                                         </Menu>
@@ -115,8 +115,8 @@
                         </headerToolbar>
                         
                         <content>
-                            <table:Table id="cogiTable"
-                                        rows="{view>/COGIData}"
+                            <table:Table id="fixedAssetTable"
+                                        rows="{view>/FixedAssetData}"
                                         selectionMode="MultiSelect"
                                         visibleRowCountMode="Auto"
                                         minAutoRowCount="5"
@@ -136,50 +136,50 @@
                                         <table:template><Text text="{view>index}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Production Order Column -->
-                                    <table:Column id="productionOrderColumn" width="120px" resizable="true" sortProperty="productionOrder" filterProperty="productionOrder">
-                                        <table:label><Label text="Production Order" /></table:label>
-                                        <table:template><Text text="{view>productionOrder}" wrapping="false" /></table:template>
+                                    <!-- Asset Number Column -->
+                                    <table:Column id="assetNumberColumn" width="120px" resizable="true" sortProperty="assetNumber" filterProperty="assetNumber">
+                                        <table:label><Label text="Asset Number" /></table:label>
+                                        <table:template><Text text="{view>assetNumber}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Material Number Column -->
-                                    <table:Column id="materialColumn" width="150px" resizable="true" sortProperty="material" filterProperty="material">
-                                        <table:label><Label text="Material Number" /></table:label>
-                                        <table:template><Text text="{view>material}" wrapping="false" /></table:template>
+                                    <!-- Asset Description Column -->
+                                    <table:Column id="assetDescColumn" width="250px" resizable="true" sortProperty="assetDescription" filterProperty="assetDescription">
+                                        <table:label><Label text="Asset Description" /></table:label>
+                                        <table:template><Text text="{view>assetDescription}" wrapping="true" maxLines="2" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Material Description Column -->
-                                    <table:Column id="materialDescColumn" width="200px" resizable="true" sortProperty="materialDesc" filterProperty="materialDesc">
-                                        <table:label><Label text="Material Description" /></table:label>
-                                        <table:template><Text text="{view>materialDesc}" wrapping="true" maxLines="2" /></table:template>
+                                    <!-- Acquisition Date Column -->
+                                    <table:Column id="acquisitionDateColumn" width="130px" resizable="true" sortProperty="acquisitionDate" filterProperty="acquisitionDate">
+                                        <table:label><Label text="Acquisition Date" /></table:label>
+                                        <table:template><Text text="{view>acquisitionDate}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Plant Column -->
-                                    <table:Column id="plantColumn" width="100px" resizable="true" sortProperty="plant" filterProperty="plant">
-                                        <table:label><Label text="Plant" /></table:label>
-                                        <table:template><Text text="{view>plant}" wrapping="false" /></table:template>
+                                    <!-- Acquisition Value Column -->
+                                    <table:Column id="acquisitionValueColumn" width="150px" resizable="true" sortProperty="acquisitionValue" filterProperty="acquisitionValue">
+                                        <table:label><Label text="Acquisition Value" /></table:label>
+                                        <table:template><Text text="{view>acquisitionValue}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Storage Location Column -->
-                                    <table:Column id="storagePlaceColumn" width="120px" resizable="true" sortProperty="storagePlace" filterProperty="storagePlace">
-                                        <table:label><Label text="Storage Location" /></table:label>
-                                        <table:template><Text text="{view>storagePlace}" wrapping="false" /></table:template>
+                                    <!-- Accumulated Depreciation Column -->
+                                    <table:Column id="accDepreciationColumn" width="180px" resizable="true" sortProperty="accumulatedDepreciation" filterProperty="accumulatedDepreciation">
+                                        <table:label><Label text="Accumulated Depreciation" /></table:label>
+                                        <table:template><Text text="{view>accumulatedDepreciation}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Movement Type Column -->
-                                    <table:Column id="movementTypeColumn" width="100px" resizable="true" sortProperty="movementType" filterProperty="movementType">
-                                        <table:label><Label text="Movement Type" /></table:label>
-                                        <table:template><Text text="{view>movementType}" wrapping="false" /></table:template>
+                                    <!-- Last Depreciation Date Column -->
+                                    <table:Column id="lastDepDateColumn" width="160px" resizable="true" sortProperty="lastDepreciationDate" filterProperty="lastDepreciationDate">
+                                        <table:label><Label text="Last Depreciation Date" /></table:label>
+                                        <table:template><Text text="{view>lastDepreciationDate}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
                                     <!-- Error Description Column -->
-                                    <table:Column id="errorDescColumn" width="300px" resizable="true" sortProperty="errorDesc" filterProperty="errorDesc">
+                                    <table:Column id="errorDescColumn" width="250px" resizable="true" sortProperty="errorDesc" filterProperty="errorDesc">
                                         <table:label><Label text="Error Description" /></table:label>
                                         <table:template><Text text="{view>errorDesc}" wrapping="true" maxLines="3" /></table:template>
                                     </table:Column>
                                     
                                     <!-- AI Suggestion Column -->
-                                    <table:Column id="aiSuggestionColumn" width="350px" resizable="true" sortProperty="aiSuggestion" filterProperty="aiSuggestion">
+                                    <table:Column id="aiSuggestionColumn" width="300px" resizable="true" sortProperty="aiSuggestion" filterProperty="aiSuggestion">
                                         <table:label><Label text="AI Suggestion" /></table:label>
                                         <table:template><Text text="{view>aiSuggestion}" wrapping="true" maxLines="3" /></table:template>
                                     </table:Column>
@@ -190,7 +190,7 @@
                                     <IllustratedMessage 
                                         illustrationType="sapIllus-EmptyList"
                                         title="No Data"
-                                        description="Please select query conditions and click the query button to get COGI data" />
+                                        description="Please select query conditions and click the query button to get fixed asset depreciation data" />
                                 </table:noData>
                             </table:Table>
                         </content>

@@ -7,7 +7,7 @@
     xmlns:viz.data="sap.viz.ui5.data"
     xmlns:table="sap.ui.table"
     xmlns:core="sap.ui.core">
-    <Page id="page" title="成本中心金额差异分析 (2025年10月)" showNavButton="true" navButtonPress="onNavBack">
+    <Page id="page" title="Cost Center Amount Variance Analysis (October 2025)" showNavButton="true" navButtonPress="onNavBack">
         <content>
             <l:Grid defaultSpan="XL12 L12 M12 S12" containerQuery="true" width="100%">
                 <l:content>
@@ -15,14 +15,14 @@
                     <Panel class="sapUiNoMargin" expandable="true" expanded="true" width="100%">
                         <headerToolbar>
                             <Toolbar>
-                                <Title text="图表分析" level="H3" />
+                                <Title text="Chart Analysis" level="H3" />
                             </Toolbar>
                         </headerToolbar>
                         <content>
                             <l:Grid defaultSpan="XL4 L4 M12 S12">
                                 <l:content>
                                     <!-- Bar Chart -->
-                                    <viz:VizFrame id="costCenterBarChart" vizType="bar" width="100%" height="300px">
+                                    <viz:VizFrame id="costCenterBarChart" vizType="bar" width="100%" height="300px" vizProperties="{title:{visible:true,text:'Current Month Cost Center Amount (CNY)'}}">
                                         <viz:dataset>
                                             <viz.data:FlattenedDataset data="{view>/CostCenterAmounts}">
                                                 <viz.data:dimensions>
@@ -43,7 +43,7 @@
                                     <Panel>
                                         <content>
                                             <FlexBox width="100%" alignItems="Start">
-                                                <viz:VizFrame id="monthlyTrendChart" vizType="line" width="100%" height="300px">
+                                                <viz:VizFrame id="monthlyTrendChart" vizType="line" width="100%" height="300px" vizProperties="{title:{visible:true,text:'Cost Center Trend (CNY)'}}">
                                                     <viz:layoutData>
                                                         <FlexItemData growFactor="1" />
                                                     </viz:layoutData>
@@ -76,7 +76,7 @@
                                     <Panel>
                                         <content>
                                             <FlexBox width="100%" alignItems="Start">
-                                                <viz:VizFrame id="costCenterPieChart" vizType="pie" width="100%" height="300px">
+                                                <viz:VizFrame id="costCenterPieChart" vizType="pie" width="100%" height="300px" vizProperties="{title:{visible:true,text:'Cost Element Percentage'}}">
                                                     <viz:layoutData>
                                                         <FlexItemData growFactor="1" />
                                                     </viz:layoutData>
@@ -114,12 +114,12 @@
                     <Panel class="sapUiNoMargin sapUiMediumMarginTop" expandable="true" expanded="true" width="100%">
                         <headerToolbar>
                             <Toolbar>
-                                <Title text="成本要素分析" level="H3" />
+                                <Title text="Cost Element Analysis" level="H3" />
                             </Toolbar>
                         </headerToolbar>
                         <content>
                             <FlexBox width="100%" alignItems="Start">
-                                <viz:VizFrame id="costElementChart" vizType="combination" width="100%" height="200px">
+                                <viz:VizFrame id="costElementChart" vizType="combination" width="100%" height="200px" vizProperties="{title:{visible:true,text:'Cost Element Trend (CNY)'}}">
                                     <viz:layoutData>
                                         <FlexItemData growFactor="1" />
                                     </viz:layoutData>
@@ -155,18 +155,18 @@
                     <Panel class="sapUiNoMargin sapUiMediumMarginTop" expandable="true" expanded="true" width="100%">
                         <headerToolbar>
                             <Toolbar>
-                                <Title text="详细数据" level="H3" />
+                                <Title text="Detailed Data" level="H3" />
                             </Toolbar>
                         </headerToolbar>
                         <content>
                             <table:Table id="detailsTable" rows="{view>/Details}" selectionMode="Single" visibleRowCountMode="Auto">
                                 <table:columns>
-                                    <table:Column><table:label><Label text="成本中心" /></table:label><table:template><Text text="{view>costCenter}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="成本要素" /></table:label><table:template><Text text="{view>costElement}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="当前月份金额" /></table:label><table:template><Text text="{view>currentMonthAmount}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="过去六个月平均金额" /></table:label><table:template><Text text="{view>avgAmount}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="差异金额" /></table:label><table:template><Text text="{path: 'view>diffAmount', formatter: '.formatDiffAmount'}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="差异占比 (%)" /></table:label><table:template><Text text="{view>variance}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="Cost Center" /></table:label><table:template><Text text="{view>costCenter}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="Cost Element" /></table:label><table:template><Text text="{view>costElement}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="Current Month Amount" /></table:label><table:template><Text text="{view>currentMonthAmount}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="Average Amount (Past 6 Months)" /></table:label><table:template><Text text="{view>avgAmount}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="Variance Amount" /></table:label><table:template><Text text="{path: 'view>diffAmount', formatter: '.formatDiffAmount'}" /></table:template></table:Column>
+                                    <table:Column><table:label><Label text="Variance (%)" /></table:label><table:template><Text text="{view>variance}" /></table:template></table:Column>
                                 </table:columns>
                             </table:Table>
                         </content>
