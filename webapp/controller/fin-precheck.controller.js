@@ -61,7 +61,7 @@ sap.ui.define([
                     MessageToast.show("数据模型加载失败，请刷新页面重试。");AI
                 }
                 oTable.setBusy(false);
-                oButton.setText("AI预检查");
+                oButton.setText("AI Pre-Check");
                 oButton.setEnabled(true);
             }, 5000);
         },

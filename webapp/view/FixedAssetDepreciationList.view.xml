@@ -137,52 +137,53 @@
                                     </table:Column>
                                     
                                     <!-- Asset Number Column -->
-                                    <table:Column id="assetNumberColumn" width="120px" resizable="true" sortProperty="assetNumber" filterProperty="assetNumber">
-                                        <table:label><Label text="Asset Number" /></table:label>
-                                        <table:template><Text text="{view>assetNumber}" wrapping="false" /></table:template>
-                                    </table:Column>
+                    <!-- Asset Number Column -->
+                    <table:Column id="assetNumberColumn" width="120px" resizable="true" sortProperty="anln1" filterProperty="anln1">
+                        <table:label><Label text="Asset Number" /></table:label>
+                        <table:template><Text text="{view>anln1}" wrapping="false" /></table:template>
+                    </table:Column>
                                     
-                                    <!-- Asset Description Column -->
-                                    <table:Column id="assetDescColumn" width="250px" resizable="true" sortProperty="assetDescription" filterProperty="assetDescription">
-                                        <table:label><Label text="Asset Description" /></table:label>
-                                        <table:template><Text text="{view>assetDescription}" wrapping="true" maxLines="2" /></table:template>
-                                    </table:Column>
+                    <!-- Asset Sub Number Column -->
+                    <table:Column id="assetDescColumn" width="250px" resizable="true" sortProperty="anln2" filterProperty="anln2">
+                        <table:label><Label text="Asset Sub Number" /></table:label>
+                        <table:template><Text text="{view>anln2}" wrapping="true" maxLines="2" /></table:template>
+                    </table:Column>
                                     
-                                    <!-- Acquisition Date Column -->
-                                    <table:Column id="acquisitionDateColumn" width="130px" resizable="true" sortProperty="acquisitionDate" filterProperty="acquisitionDate">
-                                        <table:label><Label text="Acquisition Date" /></table:label>
-                                        <table:template><Text text="{view>acquisitionDate}" wrapping="false" /></table:template>
-                                    </table:Column>
+                    <!-- Fiscal Year Column -->
+                    <table:Column id="acquisitionDateColumn" width="130px" resizable="true" sortProperty="gjahr" filterProperty="gjahr">
+                        <table:label><Label text="Fiscal Year" /></table:label>
+                        <table:template><Text text="{view>gjahr}" wrapping="false" /></table:template>
+                    </table:Column>
                                     
-                                    <!-- Acquisition Value Column -->
-                                    <table:Column id="acquisitionValueColumn" width="150px" resizable="true" sortProperty="acquisitionValue" filterProperty="acquisitionValue">
-                                        <table:label><Label text="Acquisition Value" /></table:label>
-                                        <table:template><Text text="{view>acquisitionValue}" wrapping="false" /></table:template>
-                                    </table:Column>
+                    <!-- Posting Period Column -->
+                    <table:Column id="acquisitionValueColumn" width="150px" resizable="true" sortProperty="peraf" filterProperty="peraf">
+                        <table:label><Label text="Posting Period" /></table:label>
+                        <table:template><Text text="{view>peraf}" wrapping="false" /></table:template>
+                    </table:Column>
                                     
-                                    <!-- Accumulated Depreciation Column -->
-                                    <table:Column id="accDepreciationColumn" width="180px" resizable="true" sortProperty="accumulatedDepreciation" filterProperty="accumulatedDepreciation">
-                                        <table:label><Label text="Accumulated Depreciation" /></table:label>
-                                        <table:template><Text text="{view>accumulatedDepreciation}" wrapping="false" /></table:template>
-                                    </table:Column>
+                    <!-- Planned Depreciation Column -->
+                    <table:Column id="accDepreciationColumn" width="180px" resizable="true" sortProperty="nafap" filterProperty="nafap">
+                        <table:label><Label text="Planned Depreciation" /></table:label>
+                        <table:template><Text text="{view>nafap}" wrapping="false" /></table:template>
+                    </table:Column>
                                     
-                                    <!-- Last Depreciation Date Column -->
-                                    <table:Column id="lastDepDateColumn" width="160px" resizable="true" sortProperty="lastDepreciationDate" filterProperty="lastDepreciationDate">
-                                        <table:label><Label text="Last Depreciation Date" /></table:label>
-                                        <table:template><Text text="{view>lastDepreciationDate}" wrapping="false" /></table:template>
-                                    </table:Column>
+                    <!-- Depreciation Area Column -->
+                    <table:Column id="lastDepDateColumn" width="160px" resizable="true" sortProperty="afaber" filterProperty="afaber">
+                        <table:label><Label text="Depreciation Area" /></table:label>
+                        <table:template><Text text="{view>afaber}" wrapping="false" /></table:template>
+                    </table:Column>
                                     
-                                    <!-- Error Description Column -->
-                                    <table:Column id="errorDescColumn" width="250px" resizable="true" sortProperty="errorDesc" filterProperty="errorDesc">
-                                        <table:label><Label text="Error Description" /></table:label>
-                                        <table:template><Text text="{view>errorDesc}" wrapping="true" maxLines="3" /></table:template>
-                                    </table:Column>
+                    <!-- Currency Column -->
+                    <table:Column id="errorDescColumn" width="100px" resizable="true" sortProperty="waers" filterProperty="waers">
+                        <table:label><Label text="Currency" /></table:label>
+                        <table:template><Text text="{view>waers}" wrapping="false" /></table:template>
+                    </table:Column>
                                     
-                                    <!-- AI Suggestion Column -->
-                                    <table:Column id="aiSuggestionColumn" width="300px" resizable="true" sortProperty="aiSuggestion" filterProperty="aiSuggestion">
-                                        <table:label><Label text="AI Suggestion" /></table:label>
-                                        <table:template><Text text="{view>aiSuggestion}" wrapping="true" maxLines="3" /></table:template>
-                                    </table:Column>
+                    <!-- Company Code Column -->
+                    <table:Column id="aiSuggestionColumn" width="130px" resizable="true" sortProperty="bukrs" filterProperty="bukrs">
+                        <table:label><Label text="Company Code" /></table:label>
+                        <table:template><Text text="{view>bukrs}" wrapping="false" /></table:template>
+                    </table:Column>
                                 </table:columns>
                                 
                                 <!-- No Data Display -->

@@ -1,1 +1,65 @@
 /* Enter your custom styles here */
+
+/* ============================================
+   关键：移除FLP Shell的左右边距
+   FLP Sandbox默认会限制应用宽度，产生两侧灰色留白
+   ============================================ */
+
+/* FLP Shell容器 - 这是产生留白的根本原因 */
+.sapUshellShellCntnt,
+.sapUshellApplicationContainer,
+.sapUshellShellMain,
+.sapUshellShellCanvas {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* FLP Shell头部后的内容区域 */
+.sapUshellShellHead ~ div,
+.sapUshellShellHead + div {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* sap.m.Shell容器 */
+.sapMShell,
+.sapMShellContent,
+.sapMShellCentralBox {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* 应用容器 */
+.sapMShellAppWidthLimited .sapMShellCentralBox {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* 移除Page内容padding */
+.sapMPage,
+.sapMPageContent {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* HTML/Body */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+/* App容器 */
+#app, #container, #container-uiarea,
+#finprecheck, #finprecheck---app {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}

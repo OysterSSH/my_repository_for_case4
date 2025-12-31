@@ -29,8 +29,10 @@ sap.ui.define([
             });
             this.getView().setModel(oViewModel, "view");
             
-            // 获取OData V4模型
-            this.oModel = this.getOwnerComponent().getModel();
+            // CPI配置 - 通过本地后端代理调用
+            this.CPI_CONFIG = {
+                url: "http://localhost:3000/api/cogi"
+            };
             
             // 设置默认月份为2025-10
             this._setDefaultMonth();
@@ -57,40 +59,139 @@ sap.ui.define([
                 oMonthPicker.setValue("2025-10");
             }
             
+            // 自动从CPI加载数据
             this._loadCOGIData(sCheckItem);
         },
 
         _loadCOGIData: function(sCheckItem) {
             const oViewModel = this.getView().getModel("view");
-            const oCogiModel = this.getOwnerComponent().getModel("cogiResultItems");
-
+            const that = this; // 保存上下文
+            
             oViewModel.setProperty("/busy", true);
 
-            const processData = () => {
-                const aAllData = oCogiModel.getData();
-                if (aAllData && aAllData.length > 0) {
-                    const aData = aAllData.map((oData, index) => ({
-                        index: index + 1,
-                        sequenceNumber: oData.sequenceNumber,
-                        productionOrder: oData.productionOrder,
-                        material: oData.materialNumber,
-                        materialDesc: oData.materialDesc,
-                        plant: oData.plant,
-                        storagePlace: oData.storageLocation,
-                        movementType: oData.movementType,
-                        errorDesc: oData.errorDesc,
-                        aiSuggestion: oData.suggestedAction
-                    }));
-                    oViewModel.setProperty("/COGIData", aData);
-                }
-                oViewModel.setProperty("/busy", false);
-            };
+            // 获取月份选择器的值
+            const oMonthPicker = this.byId("monthPicker");
+            const sMonth = oMonthPicker ? oMonthPicker.getValue() : "2025-10";
+            
+            // 从月份中提取年月（格式：2025-10 -> 2025/10）
+            const [year, month] = sMonth.split("-");
+            const sPostingPeriod = `${year}/${month}`;
 
-            if (oCogiModel.getData() && oCogiModel.getData().length > 0) {
-                processData();
-            } else {
-                oCogiModel.attachRequestCompleted(processData);
-            }
+            console.log("=== 开始从CPI加载COGI数据 ===");
+            console.log("请求月份:", sMonth);
+            console.log("过账期间:", sPostingPeriod);
+
+            // 调用CPI接口获取4个字段
+            this._fetchCOGIDataFromCPI(sPostingPeriod)
+                .then((aCPIData) => {
+                    console.log("✅ CPI返回成功，数据条数:", aCPIData.length);
+                    console.log("CPI数据（前3条）:", JSON.stringify(aCPIData.slice(0, 3), null, 2));
+                    
+                    // 加载Mock数据
+                    return that._loadMockData().then((aMockData) => {
+                        console.log("✅ Mock数据加载成功，数据条数:", aMockData.length);
+                        
+                        // 合并CPI数据和Mock数据
+                        const aProcessedData = aCPIData.map((oCPIItem, index) => {
+                            const oMockItem = aMockData[index] || {};
+                            return {
+                                index: index + 1,
+                                // CPI的4个字段
+                                plant: oCPIItem.werks_d,
+                                material: oCPIItem.matnr,
+                                productionOrder: oCPIItem.aufnr,
+                                movementType: oCPIItem.bwart,
+                                // Mock数据的其他字段
+                                materialDesc: oMockItem.materialDesc || "",
+                                storagePlace: oMockItem.storageLocation || "",
+                                errorDesc: oMockItem.errorDesc || "",
+                                aiSuggestion: oMockItem.suggestedAction || "",
+                                // 保留CPI的其他原始字段（用于调试）
+                                werks_d: oCPIItem.werks_d,
+                                matnr: oCPIItem.matnr,
+                                aufnr: oCPIItem.aufnr,
+                                bwart: oCPIItem.bwart
+                            };
+                        });
+                        
+                        console.log("合并后的数据（前3条）:", JSON.stringify(aProcessedData.slice(0, 3), null, 2));
+                        
+                        oViewModel.setProperty("/COGIData", aProcessedData);
+                        MessageToast.show(`✅ 成功加载 ${aProcessedData.length} 条COGI数据（CPI + Mock）`);
+                        return aProcessedData; // 返回数据供后续使用
+                    });
+                })
+                .catch((error) => {
+                    console.error("❌ 数据加载失败:", error);
+                    const errorMsg = error.message || String(error);
+                    MessageBox.error(`加载COGI数据失败: ${errorMsg}\n请检查后端服务`);
+                    oViewModel.setProperty("/COGIData", []);
+                })
+                .finally(() => {
+                    oViewModel.setProperty("/busy", false);
+                    console.log("=== COGI数据加载完成 ===");
+                });
+        },
+
+        _loadMockData: function() {
+            return new Promise((resolve, reject) => {
+                const sPath = sap.ui.require.toUrl("finprecheck/model/COGIResultItems.json");
+                fetch(sPath)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const aMockData = data.results || data;
+                        resolve(aMockData);
+                    })
+                    .catch(error => {
+                        console.error("❌ Mock数据加载失败:", error);
+                        resolve([]); // 失败时返回空数组
+                    });
+            });
+        },
+
+        _fetchCOGIDataFromCPI: function(sPostingPeriod) {
+            return new Promise((resolve, reject) => {
+                console.log("📡 调用后端代理接口:");
+                console.log("  URL:", this.CPI_CONFIG.url);
+                
+                fetch(this.CPI_CONFIG.url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }
+                })
+                .then(response => {
+                    console.log("📥 后端响应状态:", response.status, response.statusText);
+                    
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(`Backend error! status: ${response.status}. ${errorData.message || errorData.error}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("📦 后端返回的原始数据:", JSON.stringify(data, null, 2));
+                    
+                    // 假设返回的数据在data.d.results或直接是数组
+                    const aResults = data.d?.results || data.results || data;
+                    
+                    console.log("📊 解析后的数据类型:", Array.isArray(aResults) ? "Array" : typeof aResults);
+                    console.log("📊 数据条数:", Array.isArray(aResults) ? aResults.length : 1);
+                    
+                    resolve(Array.isArray(aResults) ? aResults : []);
+                })
+                .catch(error => {
+                    console.error("💥 后端请求异常:", error.message);
+                    reject(error);
+                });
+            });
         },
 
         // 新增表格搜索功能（占位方法）
@@ -242,9 +343,8 @@ sap.ui.define([
                 return;
             }
             
-            // 重新加载数据
+            // 重新加载数据（会调用CPI接口）
             this._loadCOGIData();
-            MessageToast.show(`按月份 ${sMonth} 进行筛选`);
         },
 
         // 导出功能（适配新的数据结构）

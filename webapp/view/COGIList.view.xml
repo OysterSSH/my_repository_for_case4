@@ -136,49 +136,49 @@
                                         <table:template><Text text="{view>index}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Production Order Column -->
-                                    <table:Column id="productionOrderColumn" width="120px" resizable="true" sortProperty="productionOrder" filterProperty="productionOrder">
+                                    <!-- Production Order Column - FROM CPI -->
+                                    <table:Column id="productionOrderColumn" width="120px" resizable="true" sortProperty="aufnr" filterProperty="aufnr">
                                         <table:label><Label text="Production Order" /></table:label>
-                                        <table:template><Text text="{view>productionOrder}" wrapping="false" /></table:template>
+                                        <table:template><Text text="{view>aufnr}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Material Number Column -->
-                                    <table:Column id="materialColumn" width="150px" resizable="true" sortProperty="material" filterProperty="material">
+                                    <!-- Material Number Column - FROM CPI -->
+                                    <table:Column id="materialColumn" width="150px" resizable="true" sortProperty="matnr" filterProperty="matnr">
                                         <table:label><Label text="Material Number" /></table:label>
-                                        <table:template><Text text="{view>material}" wrapping="false" /></table:template>
+                                        <table:template><Text text="{view>matnr}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Material Description Column -->
+                                    <!-- Material Description Column - FROM MOCK -->
                                     <table:Column id="materialDescColumn" width="200px" resizable="true" sortProperty="materialDesc" filterProperty="materialDesc">
                                         <table:label><Label text="Material Description" /></table:label>
                                         <table:template><Text text="{view>materialDesc}" wrapping="true" maxLines="2" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Plant Column -->
-                                    <table:Column id="plantColumn" width="100px" resizable="true" sortProperty="plant" filterProperty="plant">
+                                    <!-- Plant Column - FROM CPI -->
+                                    <table:Column id="plantColumn" width="100px" resizable="true" sortProperty="werks_d" filterProperty="werks_d">
                                         <table:label><Label text="Plant" /></table:label>
-                                        <table:template><Text text="{view>plant}" wrapping="false" /></table:template>
+                                        <table:template><Text text="{view>werks_d}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Storage Location Column -->
+                                    <!-- Storage Location Column - FROM MOCK -->
                                     <table:Column id="storagePlaceColumn" width="120px" resizable="true" sortProperty="storagePlace" filterProperty="storagePlace">
                                         <table:label><Label text="Storage Location" /></table:label>
                                         <table:template><Text text="{view>storagePlace}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Movement Type Column -->
-                                    <table:Column id="movementTypeColumn" width="100px" resizable="true" sortProperty="movementType" filterProperty="movementType">
+                                    <!-- Movement Type Column - FROM CPI -->
+                                    <table:Column id="movementTypeColumn" width="100px" resizable="true" sortProperty="bwart" filterProperty="bwart">
                                         <table:label><Label text="Movement Type" /></table:label>
-                                        <table:template><Text text="{view>movementType}" wrapping="false" /></table:template>
+                                        <table:template><Text text="{view>bwart}" wrapping="false" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- Error Description Column -->
+                                    <!-- Error Description Column - FROM MOCK -->
                                     <table:Column id="errorDescColumn" width="300px" resizable="true" sortProperty="errorDesc" filterProperty="errorDesc">
                                         <table:label><Label text="Error Description" /></table:label>
                                         <table:template><Text text="{view>errorDesc}" wrapping="true" maxLines="3" /></table:template>
                                     </table:Column>
                                     
-                                    <!-- AI Suggestion Column -->
+                                    <!-- AI Suggestion Column - FROM MOCK -->
                                     <table:Column id="aiSuggestionColumn" width="350px" resizable="true" sortProperty="aiSuggestion" filterProperty="aiSuggestion">
                                         <table:label><Label text="AI Suggestion" /></table:label>
                                         <table:template><Text text="{view>aiSuggestion}" wrapping="true" maxLines="3" /></table:template>

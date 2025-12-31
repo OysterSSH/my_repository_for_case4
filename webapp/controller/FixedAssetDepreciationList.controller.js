@@ -29,8 +29,10 @@ sap.ui.define([
             });
             this.getView().setModel(oViewModel, "view");
             
-            // Get OData V4 model
-            this.oModel = this.getOwnerComponent().getModel();
+            // CPI配置 - 通过本地后端代理调用
+            this.CPI_CONFIG = {
+                url: "http://localhost:3000/api/fixedasset"
+            };
             
             // Set default month to 2025-10
             this._setDefaultMonth();
@@ -62,34 +64,104 @@ sap.ui.define([
 
         _loadFixedAssetData: function(sCheckItem) {
             const oViewModel = this.getView().getModel("view");
-            const oFixedAssetModel = this.getOwnerComponent().getModel("fixedAssetDepreciationItems");
-
             oViewModel.setProperty("/busy", true);
 
-            const processData = () => {
-                const aAllData = oFixedAssetModel.getData();
-                if (aAllData && aAllData.length > 0) {
-                    const aData = aAllData.map((oData, index) => ({
-                        index: index + 1,
-                        sequenceNumber: oData.sequenceNumber,
-                        assetNumber: oData.assetNumber,
-                        assetDescription: oData.assetDescription,
-                        acquisitionDate: oData.acquisitionDate,
-                        acquisitionValue: oData.acquisitionValue,
-                        accumulatedDepreciation: oData.accumulatedDepreciation,
-                        lastDepreciationDate: oData.lastDepreciationDate,
-                        errorDesc: oData.errorDesc,
-                        aiSuggestion: oData.suggestedAction
-                    }));
-                    oViewModel.setProperty("/FixedAssetData", aData);
-                }
-                oViewModel.setProperty("/busy", false);
-            };
+            // Get month picker value
+            const oMonthPicker = this.byId("monthPicker");
+            const sMonth = oMonthPicker ? oMonthPicker.getValue() : "2025-10";
 
-            if (oFixedAssetModel.getData() && oFixedAssetModel.getData().length > 0) {
-                processData();
-            } else {
-                oFixedAssetModel.attachRequestCompleted(processData);
+            console.log("=== 开始从CPI加载固定资产数据 ===");
+            console.log("请求月份:", sMonth);
+
+            // Call CPI to get all fixed asset fields
+            this._fetchFixedAssetDataFromCPI(sMonth)
+                .then((aCPIData) => {
+                    console.log("✅ CPI返回成功，数据条数:", aCPIData.length);
+                    console.log("原始CPI数据（全部）:", JSON.stringify(aCPIData, null, 2));
+                    
+                    // 直接使用CPI返回的数据，不再合并Mock
+                    const aProcessedData = aCPIData.map((oCPIItem, index) => ({
+                        index: index + 1,
+                        ...oCPIItem // 展开所有CPI字段
+                    }));
+                    
+                    console.log("处理后的数据（前3条）:", JSON.stringify(aProcessedData.slice(0, 3), null, 2));
+                    
+                    oViewModel.setProperty("/FixedAssetData", aProcessedData);
+                    MessageToast.show(`✅ 从CPI成功加载 ${aProcessedData.length} 条固定资产数据`);
+                })
+                .catch((error) => {
+                    console.error("❌ CPI调用失败:", error);
+                    MessageBox.error(`加载固定资产数据失败: ${error.message}\n请检查后端服务`);
+                    oViewModel.setProperty("/FixedAssetData", []);
+                })
+                .finally(() => {
+                    oViewModel.setProperty("/busy", false);
+                    console.log("=== 固定资产数据加载完成 ===");
+                });
+        },
+
+        _fetchFixedAssetDataFromCPI: function(sMonth) {
+            return new Promise((resolve, reject) => {
+                console.log("📡 调用后端代理接口:");
+                console.log("  URL:", this.CPI_CONFIG.url);
+                
+                fetch(this.CPI_CONFIG.url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }
+                })
+                .then(response => {
+                    console.log("📥 后端响应状态:", response.status, response.statusText);
+                    
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(`Backend error! status: ${response.status}. ${errorData.message || errorData.error}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("📦 后端返回的原始数据:", JSON.stringify(data, null, 2));
+                    
+                    // Assume data is in data.d.results or directly an array
+                    const aResults = data.d?.results || data.results || data;
+                    
+                    console.log("📊 解析后的数据类型:", Array.isArray(aResults) ? "Array" : typeof aResults);
+                    console.log("📊 数据条数:", Array.isArray(aResults) ? aResults.length : 1);
+                    
+                    resolve(Array.isArray(aResults) ? aResults : []);
+                })
+                .catch(error => {
+                    console.error("💥 后端请求异常:", error.message);
+                    reject(error);
+                });
+            });
+        },
+
+        _loadMockData: function(oViewModel) {
+            console.log("⚠️ 使用本地Mock数据作为备用");
+            const oFixedAssetModel = this.getOwnerComponent().getModel("fixedAssetDepreciationItems");
+            const aAllData = oFixedAssetModel.getData();
+            
+            if (aAllData && aAllData.length > 0) {
+                const aData = aAllData.map((oData, index) => ({
+                    index: index + 1,
+                    sequenceNumber: oData.sequenceNumber,
+                    assetNumber: oData.assetNumber,
+                    assetDescription: oData.assetDescription,
+                    acquisitionDate: oData.acquisitionDate,
+                    acquisitionValue: oData.acquisitionValue,
+                    accumulatedDepreciation: oData.accumulatedDepreciation,
+                    lastDepreciationDate: oData.lastDepreciationDate,
+                    errorDesc: oData.errorDesc,
+                    aiSuggestion: oData.suggestedAction
+                }));
+                oViewModel.setProperty("/FixedAssetData", aData);
+                console.log("📦 Mock数据加载完成，条数:", aData.length);
+                MessageToast.show("⚠️ 使用本地mock数据");
             }
         },
 
