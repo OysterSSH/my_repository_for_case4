@@ -153,6 +153,46 @@ app.get('/api/fixedasset', async (req, res) => {
     }
 });
 
+// 更新成本中心数据的接口
+app.post('/api/update-costcenter', async (req, res) => {
+    console.log('📡 收到更新成本中心数据请求');
+    
+    try {
+        const updateScript = require('./updateCostCenterData');
+        
+        // 获取CPI数据
+        const cpiData = await updateScript.fetchCostCenterData();
+        
+        if (cpiData.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: '没有找到符合条件的数据'
+            });
+        }
+        
+        // 处理数据
+        const processedData = updateScript.processCPIData(cpiData);
+        
+        // 更新文件
+        updateScript.updateJSONFile(processedData);
+        
+        res.json({
+            success: true,
+            message: '成本中心数据更新成功',
+            recordCount: processedData.length,
+            data: processedData
+        });
+        
+    } catch (error) {
+        console.error('💥 更新成本中心数据失败:', error.message);
+        res.status(500).json({
+            success: false,
+            error: 'Update failed',
+            message: error.message
+        });
+    }
+});
+
 // 健康检查
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', message: 'Backend server is running' });
@@ -164,4 +204,5 @@ app.listen(PORT, () => {
     console.log(`  - GET http://localhost:${PORT}/api/cogi - COGI数据`);
     console.log(`  - GET http://localhost:${PORT}/api/costcenter - 成本中心数据`);
     console.log(`  - GET http://localhost:${PORT}/api/fixedasset - 固定资产数据`);
+    console.log(`  - POST http://localhost:${PORT}/api/update-costcenter - 更新成本中心数据到JSON`);
 });

@@ -188,60 +188,22 @@ sap.ui.define([
                 
                 oViewModel.setProperty("/busy", true);
                 
-                console.log("=== 开始从CPI加载成本中心数据 ===");
+                console.log("=== 开始加载成本中心数据（使用真实CPI数据）===");
                 
-                // 调用CPI接口获取3个字段
-                this._fetchCostCenterDataFromCPI()
-                    .then((aCPIData) => {
-                        console.log("✅ CPI返回成功，数据条数:", aCPIData.length);
-                        console.log("CPI数据（前3条）:", JSON.stringify(aCPIData.slice(0, 3), null, 2));
+                // 直接加载已从CPI更新的JSON数据
+                this._loadMockData()
+                    .then((aRealData) => {
+                        console.log("✅ 数据加载成功，数据条数:", aRealData.length);
+                        console.log("📊 数据示例（前3条）:", JSON.stringify(aRealData.slice(0, 3), null, 2));
                         
-                        // 加载Mock数据
-                        return that._loadMockData().then((aMockData) => {
-                            console.log("✅ Mock数据加载成功，数据条数:", aMockData.length);
-                            
-                            // 合并CPI数据和Mock数据
-                            const aMergedData = aCPIData.map((oCPIItem, index) => {
-                                const oMockItem = aMockData[index] || {};
-                                
-                                console.log(`处理第${index + 1}条数据:`, {
-                                    "CPI原始ksl": oCPIItem.ksl,
-                                    "转换后的值": parseFloat(oCPIItem.ksl),
-                                    "belnr": oCPIItem.belnr,
-                                    "hkont": oCPIItem.hkont
-                                });
-                                
-                                return {
-                                    // CPI的3个字段
-                                    costCenter: oCPIItem.belnr || "",
-                                    costElement: oCPIItem.hkont || "",
-                                    currentMonthAmount: parseFloat(oCPIItem.ksl) || 0,
-                                    // Mock数据的其他字段
-                                    avgAmount: oMockItem.avgAmount || 0,
-                                    diffAmount: oMockItem.diffAmount || 0,
-                                    variance: oMockItem.variance || "0%",
-                                    month: oMockItem.month || "",
-                                    // 保留CPI原始字段用于调试
-                                    belnr: oCPIItem.belnr,
-                                    hkont: oCPIItem.hkont,
-                                    ksl: oCPIItem.ksl
-                                };
-                            });
-                            
-                            console.log("合并后的数据（前3条）:", JSON.stringify(aMergedData.slice(0, 3), null, 2));
-                            
-                            // 处理数据用于图表和表格
-                            that._processData(aMergedData);
-                            MessageToast.show(`✅ 成功加载 ${aMergedData.length} 条成本中心数据（CPI + Mock）`);
-                        });
+                        // 直接使用JSON文件中的真实数据
+                        that._processData(aRealData);
+                        MessageToast.show(`✅ 成功加载 ${aRealData.length} 条成本中心数据（真实CPI数据）`);
                     })
                     .catch((error) => {
                         console.error("❌ 数据加载失败:", error);
                         const errorMsg = error.message || String(error);
-                        MessageBox.error(`加载成本中心数据失败: ${errorMsg}\n将使用Mock数据`);
-                        
-                        // 失败时使用纯Mock数据
-                        that._loadMockDataOnly();
+                        MessageBox.error(`加载成本中心数据失败: ${errorMsg}`);
                     })
                     .finally(() => {
                         oViewModel.setProperty("/busy", false);
