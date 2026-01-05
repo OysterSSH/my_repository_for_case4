@@ -59,7 +59,7 @@ app.post("/api/cost-center/analyze", async (req, res) => {
     console.log(`  - 估算 Token 数: ${estimatedTokens}`);
     console.log(`  - 数据行数: ${essentialData.length}`);
 
-    // Token 预警（Claude 3.5 Sonnet 支持 200K tokens 输入）
+    // Token 预警
     if (estimatedTokens > 50000) {
       console.warn(`警告: 估算 Token 数 (${estimatedTokens}) 较高，可能影响响应速度`);
     }

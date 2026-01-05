@@ -80,46 +80,46 @@ class AICoreService {
     // 提取必要字段并格式化为表格
     const tableData = this._formatDataTable(cpiData);
     
-    const prompt = `你需要协助完成财务月结成本中心差异分析任务。请仔细阅读以下输入数据和操作步骤，输出符合要求的分析结果。
+    const prompt = `You are required to assist in performing a Financial Month-End Cost Center Variance Analysis task. Please carefully review the following input data and processing steps, and output the analysis results according to the specified requirements.
 
-<当前月份>
+<Current Month>
 ${currentMonth}
-</当前月份>
+</Current Month>
 
-<成本中心数据表>
+<Cost Center Data Table>
 ${tableData}
-</成本中心数据表>
+</Cost Center Data Table>
 
-请按照以下步骤进行操作：
+Please perform the analysis according to the following steps:
 
-步骤1：计算当前月份金额
-- 从成本中心数据表中筛选出"过账日期（月份）(BUDAT)"等于<当前月份>的所有行项目
-- 按"成本中心（KOSTL）"和"成本要素（HKONT）"分组
-- 对每组的"控制范围货币金额（KSL）"求和，得到"当前月份金额"
+Step 1: Calculate the Current Month Amount
+- Filter all line items from the cost center data table where Posting Date (Month) (BUDAT) equals the <Current Month>
+- Group by "Cost Center (KOSTL)" and "Cost Element (HKONT)"
+- Sum the "Controlling Area Currency Amount (KSL)" for each group to get the "Current Month Amount"
 
-步骤2：计算过去月份平均金额
-- 从成本中心数据表中筛选出"过账日期（月份）"在<当前月份>之前的所有行项目
-- 按时间排序并统计有效月份数（记为x）
-- 按"成本中心（KOSTL）"和"成本要素（HKONT）"分组
-- 对每组的"控制范围货币金额（KSL）"求和后除以x，得到"过去x个月平均金额"
+Step 2: Calculate the Historical Average Amount
+- Filter all line items from the cost center data table where Posting Date (Month) (BUDAT) is before the <Current Month>
+- Sort by date and count the number of valid months (denoted as x)
+- Group by "Cost Center (KOSTL)" and "Cost Element (HKONT)"
+- Sum the "Controlling Area Currency Amount (KSL)" for each group and divide by x to get the "Historical Average Amount"
 
-步骤3：计算差异并筛选
-- 对相同"成本中心（KOSTL）"和"成本要素（HKONT）"的记录，计算：
-  - 差异金额 = 当前月份金额 - 过去x个月平均金额
-  - 差异占比 = 差异金额 / 过去x个月平均金额（保留两位小数）
-- 筛选出差异占比>=20%或<=-20%的记录
+Step 3: Calculate Variance and Filter Results
+- For records with the same Cost Center (KOSTL) and Cost Element (HKONT), calculate:
+  - Variance Amount = Current Month Amount − Historical Average Amount of the Past x Months
+  - Variance Ratio = Variance Amount / Historical Average Amount of the Past x Months (rounded to two decimal places)
+- Filter and retain records where the Variance Ratio is greater than or equal to 20% or less than or equal to −20%
 
-输出要求：
-- 仅输出符合条件的记录
-- 格式为JSON数组，每个对象包含以下英文字段：
-  - cost_center (成本中心)
-  - cost_element (成本要素)
-  - current_month_amount (当前月份金额)
-  - historical_average_amount (过去x个月平均金额)
-  - variance_amount (差异金额)
-  - variance_ratio (差异占比，以小数形式表示，如0.25表示25%)
+Output Requirements:
+- Output only the records that meet the filtering criteria
+-The output must be a JSON array, where each object contains the following fields in English:
+  - cost_center
+  - cost_element
+  - current_month_amount
+  - historical_average_amount
+  - variance_amount
+  - variance_ratio (expressed as a decimal, e.g., 0.25 represents 25%)
 
-请将最终结果用<result>标签包裹，结果必须是严格的JSON格式。`;
+Please wrap the final output within <result> tags. The output must be strictly valid JSON format.`;
 
     return prompt;
   }
