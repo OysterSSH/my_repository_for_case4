@@ -164,15 +164,71 @@ sap.ui.define([
             }
 
             if (iRowIndex === 0) {
+                // 第一行：COGI 清单
                 this.oRouter.navTo("cogiList", {
                     checkItem: encodeURIComponent(oData.checkItem || ""),
                     id: oData.ID || ""
                 });
             } else if (iRowIndex === 1) {
-                this.oRouter.navTo("costCenterAnalysis");
+                // 第二行：成本中心差异分析
+                this._navigateToCostCenterAnalysis();
             } else {
                 MessageToast.show("该功能暂未实现，敬请期待");
             }
+        },
+
+        /**
+        * 导航到成本中心差异分析页面
+        */
+        _navigateToCostCenterAnalysis: function() {
+            // 显示加载指示器
+            sap.ui.core.BusyIndicator.show(0);
+    
+            // 调用后端 API 获取差异分析结果
+            fetch("http://localhost:3001/api/cost-center/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    currentMonth: "2025-10" // 或者动态获取当前月份
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                sap.ui.core.BusyIndicator.hide();
+        
+                if (data.success && data.varianceResults) {
+                    // 将数据存储到全局模型中，供目标页面使用
+                    const oComponentModel = this.getOwnerComponent().getModel("costCenterAnalysis");
+                    if (!oComponentModel) {
+                        const oNewModel = new sap.ui.model.json.JSONModel();
+                        this.getOwnerComponent().setModel(oNewModel, "costCenterAnalysis");
+                    }
+            
+                    this.getOwnerComponent().getModel("costCenterAnalysis").setData({
+                        analysisMonth: data.analysisMonth,
+                        summary: data.summary,
+                        varianceResults: data.varianceResults,
+                        rawData: data.cpiData || []
+                    });
+            
+                    // 导航到成本中心分析页面
+                    this.oRouter.navTo("costCenterAnalysis");
+            
+                    MessageToast.show(`差异分析完成，发现 ${data.varianceResults.length} 条异常记录`);
+                } else {
+                    MessageBox.error(`差异分析失败: ${data.message || "未知错误"}`);
+                }
+            })
+            .catch(error => {
+                sap.ui.core.BusyIndicator.hide();
+                console.error("成本中心差异分析失败:", error);
+                MessageBox.error(`差异分析请求失败:\n${error.message}\n\n请确保后端服务已启动 (http://localhost:3001)`);
+            });
         },
 
         onReset: function() {

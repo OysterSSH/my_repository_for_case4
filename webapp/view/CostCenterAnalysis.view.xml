@@ -156,17 +156,50 @@
                         <headerToolbar>
                             <Toolbar>
                                 <Title text="详细数据" level="H3" />
+                                <ToolbarSpacer />
+                                <Label text="共 {= ${view>/Details}.length } 条差异记录" />
                             </Toolbar>
                         </headerToolbar>
                         <content>
-                            <table:Table id="detailsTable" rows="{view>/Details}" selectionMode="Single" visibleRowCountMode="Auto">
+                            <table:Table id="detailsTable" rows="{view>/Details}" selectionMode="Single" visibleRowCountMode="Auto" rowHeight="40">
                                 <table:columns>
-                                    <table:Column><table:label><Label text="成本中心" /></table:label><table:template><Text text="{view>costCenter}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="成本要素" /></table:label><table:template><Text text="{view>costElement}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="当前月份金额" /></table:label><table:template><Text text="{view>currentMonthAmount}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="过去六个月平均金额" /></table:label><table:template><Text text="{view>avgAmount}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="差异金额" /></table:label><table:template><Text text="{path: 'view>diffAmount', formatter: '.formatDiffAmount'}" /></table:template></table:Column>
-                                    <table:Column><table:label><Label text="差异占比 (%)" /></table:label><table:template><Text text="{view>variance}" /></table:template></table:Column>
+                                    <table:Column width="8rem">
+                                        <table:label><Label text="成本中心" /></table:label>
+                                        <table:template><Text text="{view>costCenter}" /></table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem">
+                                        <table:label><Label text="成本要素" /></table:label>
+                                        <table:template><Text text="{view>costElement}" /></table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="End">
+                                        <table:label><Label text="当前月份金额" /></table:label>
+                                        <table:template>
+                                            <ObjectNumber number="{view>currentMonthAmount}" unit="CNY" />
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="End">
+                                        <table:label><Label text="历史平均金额" /></table:label>
+                                        <table:template>
+                                            <ObjectNumber number="{view>avgAmount}" unit="CNY" />
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="End">
+                                        <table:label><Label text="差异金额" /></table:label>
+                                        <table:template>
+                                            <ObjectNumber 
+                                                number="{view>diffAmount}" 
+                                                unit="CNY"
+                                                state="{= parseFloat(${view>diffAmount}) >= 0 ? 'Error' : 'Warning' }" />
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="8rem" hAlign="End">
+                                        <table:label><Label text="差异占比" /></table:label>
+                                        <table:template>
+                                            <ObjectStatus 
+                                                text="{view>variance}"
+                                                state="{= Math.abs(parseFloat(${view>variance})) >= 30 ? 'Error' : 'Warning' }" />
+                                        </table:template>
+                                    </table:Column>
                                 </table:columns>
                             </table:Table>
                         </content>
